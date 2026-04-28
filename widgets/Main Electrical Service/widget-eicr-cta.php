@@ -1,0 +1,141 @@
+<?php
+/**
+ * Widget: EICR Final CTA
+ *
+ * @package HTML_To_Elementor
+ */
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+class HTE_Widget_Eicr_Cta extends \Elementor\Widget_Base {
+
+    public function get_name()       { return 'hte-eicr-cta'; }
+    public function get_title()      { return __( 'HTE – EICR Final CTA', 'html-to-elementor' ); }
+    public function get_icon()       { return 'eicon-call-to-action'; }
+    public function get_categories() { return [ 'hte-widgets' ]; }
+    public function get_keywords()   { return [ 'hte', 'cta', 'call to action', 'booking' ]; }
+
+    protected function register_controls() {
+
+        /* ── Content ────────────────────────────────────────────────── */
+        $this->start_controls_section( 'sec_content', [
+            'label' => __( 'Content', 'html-to-elementor' ),
+            'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
+        ] );
+
+            $this->add_control( 'heading_line1', [
+                'label'   => __( 'Heading Line 1', 'html-to-elementor' ),
+                'type'    => \Elementor\Controls_Manager::TEXT,
+                'default' => __( 'Need an', 'html-to-elementor' ),
+            ] );
+
+            $this->add_control( 'heading_line2_gradient', [
+                'label'   => __( 'Heading Line 2 (Gradient)', 'html-to-elementor' ),
+                'type'    => \Elementor\Controls_Manager::TEXT,
+                'default' => __( 'EICR Today?', 'html-to-elementor' ),
+            ] );
+
+            $this->add_control( 'description', [
+                'label'   => __( 'Description', 'html-to-elementor' ),
+                'type'    => \Elementor\Controls_Manager::TEXTAREA,
+                'default' => __( 'Book your certified electrical inspection online in minutes and get your report fast.', 'html-to-elementor' ),
+            ] );
+
+        $this->end_controls_section();
+
+        /* ── Primary Button ─────────────────────────────────────────── */
+        $this->start_controls_section( 'sec_btn_primary', [
+            'label' => __( 'Primary Button', 'html-to-elementor' ),
+            'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
+        ] );
+
+            $this->add_control( 'btn_primary_text', [
+                'label'   => __( 'Button Text', 'html-to-elementor' ),
+                'type'    => \Elementor\Controls_Manager::TEXT,
+                'default' => __( 'Get Instant Quote', 'html-to-elementor' ),
+            ] );
+
+            $this->add_control( 'btn_primary_icon', [
+                'label'   => __( 'Button Icon (Lucide)', 'html-to-elementor' ),
+                'type'    => \Elementor\Controls_Manager::TEXT,
+                'default' => 'arrow-right',
+            ] );
+
+            $this->add_control( 'btn_primary_link', [
+                'label'         => __( 'Button Link', 'html-to-elementor' ),
+                'type'          => \Elementor\Controls_Manager::URL,
+                'default'       => [ 'url' => '#' ],
+                'show_external' => true,
+            ] );
+
+        $this->end_controls_section();
+
+        /* ── Secondary Button ───────────────────────────────────────── */
+        $this->start_controls_section( 'sec_btn_secondary', [
+            'label' => __( 'Secondary Button', 'html-to-elementor' ),
+            'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
+        ] );
+
+            $this->add_control( 'btn_secondary_text', [
+                'label'   => __( 'Button Text', 'html-to-elementor' ),
+                'type'    => \Elementor\Controls_Manager::TEXT,
+                'default' => __( 'Call 0800 123 456', 'html-to-elementor' ),
+            ] );
+
+            $this->add_control( 'btn_secondary_link', [
+                'label'   => __( 'Phone Number (tel: link)', 'html-to-elementor' ),
+                'type'    => \Elementor\Controls_Manager::TEXT,
+                'default' => 'tel:+44800123456',
+            ] );
+
+        $this->end_controls_section();
+    }
+
+    protected function render() {
+        $s       = $this->get_settings_for_display();
+        $target  = ! empty( $s['btn_primary_link']['is_external'] ) ? ' target="_blank"' : '';
+        $norel   = ! empty( $s['btn_primary_link']['nofollow'] )    ? ' rel="nofollow"'  : '';
+        ?>
+        <section class="py-24 bg-light-grey relative overflow-hidden">
+            <div class="absolute inset-0 z-0 opacity-10">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-electric to-safety rounded-full mix-blend-screen filter blur-[100px]"></div>
+            </div>
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center fade-in">
+
+                <h2 class="text-5xl md:text-6xl font-bold text-navy mb-6">
+                    <?php echo esc_html( $s['heading_line1'] ); ?>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-electric to-safety">
+                        <?php echo esc_html( $s['heading_line2_gradient'] ); ?>
+                    </span>
+                </h2>
+
+                <?php if ( ! empty( $s['description'] ) ) : ?>
+                    <p class="text-xl text-navy/70 mb-10 max-w-2xl mx-auto"><?php echo esc_html( $s['description'] ); ?></p>
+                <?php endif; ?>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+
+                    <?php if ( ! empty( $s['btn_primary_text'] ) ) : ?>
+                        <a href="<?php echo esc_url( $s['btn_primary_link']['url'] ); ?>"
+                           class="bg-orange hover:bg-orange/90 text-white px-10 py-5 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,122,0,0.4)] flex items-center justify-center gap-2"
+                           <?php echo $target . $norel; ?>>
+                            <?php echo esc_html( $s['btn_primary_text'] ); ?>
+                            <?php if ( ! empty( $s['btn_primary_icon'] ) ) : ?>
+                                <i data-lucide="<?php echo esc_attr( $s['btn_primary_icon'] ); ?>" class="w-5 h-5"></i>
+                            <?php endif; ?>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if ( ! empty( $s['btn_secondary_text'] ) ) : ?>
+                        <a href="<?php echo esc_attr( $s['btn_secondary_link'] ); ?>"
+                           class="bg-white hover:bg-gray-50 border-2 border-navy text-navy px-10 py-5 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2">
+                            <?php echo esc_html( $s['btn_secondary_text'] ); ?>
+                        </a>
+                    <?php endif; ?>
+
+                </div>
+            </div>
+        </section>
+        <?php
+    }
+}
