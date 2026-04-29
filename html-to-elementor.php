@@ -206,28 +206,78 @@ final class HTML_To_Elementor {
     /*    widget-features-grid.php   →  HTE_Widget_Features_Grid           */
     /* ------------------------------------------------------------------ */
 
+    // public function register_widgets( $widgets_manager ) {
+    //     $widgets_base_dir = HTE_DIR . 'widgets/';
+    //     if ( ! is_dir( $widgets_base_dir ) ) return;
+
+    //     // Get all widget files from root /widgets/ folder
+    //     $widget_files = glob( $widgets_base_dir . 'widget-*.php' );
+
+    //     // Get all widget files from page-specific subfolders
+    //     $page_folders = glob( $widgets_base_dir . '*', GLOB_ONLYDIR );
+    //     foreach ( $page_folders as $folder ) {
+    //         $page_widgets = glob( $folder . '/widget-*.php' );
+    //         if ( $page_widgets ) {
+    //             $widget_files = array_merge( $widget_files, $page_widgets );
+    //         }
+    //     }
+
+    //     // Register all discovered widgets
+    //     foreach ( $widget_files as $file ) {
+    //         require_once $file;
+
+    //         $slug       = basename( $file, '.php' );
+    //         $without    = substr( $slug, strlen( 'widget-' ) );
+    //         $class_name = 'HTE_Widget_' . str_replace(
+    //             ' ', '_',
+    //             ucwords( str_replace( '-', ' ', $without ) )
+    //         );
+
+    //         if ( class_exists( $class_name ) ) {
+    //             $widgets_manager->register( new $class_name() );
+    //         }
+
+    //         // echo "<pre>";
+    //         // var_dump('$class_name', $class_name);
+
+    //     }
+
+    //     // die();
+        
+    // }
+
     public function register_widgets( $widgets_manager ) {
+
         $widgets_base_dir = HTE_DIR . 'widgets/';
+
         if ( ! is_dir( $widgets_base_dir ) ) return;
 
-        // Get all widget files from root /widgets/ folder
-        $widget_files = glob( $widgets_base_dir . 'widget-*.php' );
+        $widget_files = [];
 
-        // Get all widget files from page-specific subfolders
-        $page_folders = glob( $widgets_base_dir . '*', GLOB_ONLYDIR );
-        foreach ( $page_folders as $folder ) {
-            $page_widgets = glob( $folder . '/widget-*.php' );
-            if ( $page_widgets ) {
-                $widget_files = array_merge( $widget_files, $page_widgets );
-            }
-        }
+        $iterator = new RecursiveIteratorIterator(
+
+            new RecursiveDirectoryIterator( $widgets_base_dir )
+
+        );
+
+        foreach ( $iterator as $file ) {
+
+            if ( $file->isFile() && strpos( $file->getFilename(), 'widget-' ) === 0 && $file->getExtension() === 'php' ) {
+
+                $widget_files[] = $file->getPathname();
+
+            };
+
+        };
 
         // Register all discovered widgets
         foreach ( $widget_files as $file ) {
+
             require_once $file;
 
             $slug       = basename( $file, '.php' );
             $without    = substr( $slug, strlen( 'widget-' ) );
+
             $class_name = 'HTE_Widget_' . str_replace(
                 ' ', '_',
                 ucwords( str_replace( '-', ' ', $without ) )
@@ -237,13 +287,9 @@ final class HTML_To_Elementor {
                 $widgets_manager->register( new $class_name() );
             }
 
-            // echo "<pre>";
-            // var_dump('$class_name', $class_name);
-
+            // Debug if needed
+            // echo "<pre>"; var_dump($class_name);
         }
-
-        // die();
-        
     }
 
     /* ------------------------------------------------------------------ */
