@@ -73,3 +73,21 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .delay-100 { transition-delay: 100ms; }
 .delay-200 { transition-delay: 200ms; }
 .delay-300 { transition-delay: 300ms; }
+
+
+body .h-\[500px\] {
+    /*height: 500px !important;*/
+    height: 500px;
+}
+
+body .h-full {
+    height: 100%;
+}
+
+.rounded-\[60px\] {
+    border-radius: 60px !important;
+}
+
+.rounded-\[40px\] {
+    border-radius: 40px !important;
+}
